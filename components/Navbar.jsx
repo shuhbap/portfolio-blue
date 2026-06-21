@@ -3,256 +3,262 @@
 import { useState, useEffect } from "react";
 
 export default function Navbar() {
-const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-useEffect(() => {
-document.body.style.overflow = menuOpen ? "hidden" : "auto";
-}, [menuOpen]);
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-const closeMenu = () => setMenuOpen(false);
+  const navLinks = [
+    { href: "#about", label: "About" },
+    { href: "#services", label: "Services" },
+    { href: "#works", label: "Works" },
+    { href: "#skills", label: "Skills" },
+    { href: "#contact", label: "Contact" },
+  ];
 
-return (
-<>
-{/* Navbar */}
-<nav
-style={{
-position: "fixed",
-top: 0,
-left: 0,
-width: "100%",
-padding: "22px 8%",
-display: "flex",
-justifyContent: "space-between",
-alignItems: "center",
-background: "rgba(0,0,0,0.65)",
-backdropFilter: "blur(20px)",
-borderBottom: "1px solid rgba(167,230,255,0.1)",
-zIndex: 1000,
-boxSizing: "border-box",
-}}
->
-{/* Logo */}
-<h2
-style={{
-color: "#A7E6FF",
-fontSize: "32px",
-fontWeight: "800",
-letterSpacing: "1px",
-cursor: "pointer",
-}}
->
-Shuhaib AP </h2>
+  const handleLinkClick = () => {
+    setMenuOpen(false);
+  };
 
-```
-    {/* Desktop Menu */}
-    <div className="desktop-menu">
-      {["About", "Services", "Works", "Skills", "Contact"].map(
-        (item) => (
-          <a
-            key={item}
-            href={`#${item.toLowerCase()}`}
+  return (
+    <>
+      <nav
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "20px 8%",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+          background: scrolled
+            ? "rgba(0,0,0,0.92)"
+            : "rgba(0,0,0,0.7)",
+          backdropFilter: "blur(20px)",
+          borderBottom: scrolled
+            ? "1px solid rgba(167,230,255,0.15)"
+            : "1px solid transparent",
+          transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+          boxShadow: scrolled
+            ? "0 10px 40px rgba(0,0,0,0.5)"
+            : "none",
+        }}
+      >
+        {/* Logo */}
+        <h2
+          style={{
+            color: "#A7E6FF",
+            fontSize: "clamp(24px, 3vw, 32px)",
+            fontWeight: "800",
+            letterSpacing: "1px",
+            cursor: "pointer",
+            textShadow: "0 0 30px rgba(167,230,255,0.2)",
+            transition: "0.3s",
+          }}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        >
+          Shuhaib <span style={{ color: "#fff" }}>AP</span>
+        </h2>
+
+        {/* Desktop Menu */}
+        <div
+          style={{
+            display: "flex",
+            gap: "35px",
+            alignItems: "center",
+          }}
+          className="desktop-menu"
+        >
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              style={{
+                color: "#fff",
+                textDecoration: "none",
+                fontWeight: "500",
+                fontSize: "15px",
+                position: "relative",
+                transition: "0.3s",
+                letterSpacing: "0.5px",
+                padding: "5px 0",
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.color = "#A7E6FF";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.color = "#fff";
+              }}
+            >
+              {link.label}
+              <span
+                style={{
+                  position: "absolute",
+                  bottom: "-2px",
+                  left: "0",
+                  width: "0%",
+                  height: "2px",
+                  background: "#A7E6FF",
+                  transition: "0.3s",
+                  boxShadow: "0 0 10px rgba(167,230,255,0.5)",
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.width = "100%";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.width = "0%";
+                }}
+              />
+            </a>
+          ))}
+        </div>
+
+        {/* Hamburger Button */}
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          style={{
+            background: "transparent",
+            border: "none",
+            cursor: "pointer",
+            display: "flex",
+            flexDirection: "column",
+            gap: "6px",
+            padding: "8px",
+            borderRadius: "8px",
+            transition: "0.3s",
+            zIndex: 1001,
+          }}
+          aria-label="Toggle menu"
+        >
+          <span
             style={{
-              color: "#fff",
-              textDecoration: "none",
-              fontSize: "15px",
-              fontWeight: "500",
-              position: "relative",
-              transition: ".3s",
+              width: "30px",
+              height: "2.5px",
+              background: "#A7E6FF",
+              borderRadius: "2px",
+              transition: "0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+              transform: menuOpen
+                ? "rotate(45deg) translate(6px,6px)"
+                : "none",
+              boxShadow: menuOpen ? "none" : "0 0 10px rgba(167,230,255,0.3)",
+            }}
+          />
+          <span
+            style={{
+              width: "30px",
+              height: "2.5px",
+              background: "#A7E6FF",
+              borderRadius: "2px",
+              transition: "0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+              opacity: menuOpen ? 0 : 1,
+              transform: menuOpen ? "scaleX(0)" : "none",
+            }}
+          />
+          <span
+            style={{
+              width: "30px",
+              height: "2.5px",
+              background: "#A7E6FF",
+              borderRadius: "2px",
+              transition: "0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+              transform: menuOpen
+                ? "rotate(-45deg) translate(6px,-6px)"
+                : "none",
+              boxShadow: menuOpen ? "none" : "0 0 10px rgba(167,230,255,0.3)",
+            }}
+          />
+        </button>
+      </nav>
+
+      {/* Mobile Menu */}
+      {menuOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: "80px",
+            left: 0,
+            right: 0,
+            background: "rgba(0,0,0,0.95)",
+            backdropFilter: "blur(20px)",
+            padding: "30px 8%",
+            borderBottom: "1px solid rgba(167,230,255,0.1)",
+            zIndex: 999,
+            animation: "slideDown 0.3s ease-out",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "25px",
+              alignItems: "center",
             }}
           >
-            {item}
-          </a>
-        )
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={handleLinkClick}
+                style={{
+                  color: "#fff",
+                  textDecoration: "none",
+                  fontSize: "1.2rem",
+                  fontWeight: "500",
+                  transition: "0.3s",
+                  padding: "10px",
+                  width: "100%",
+                  textAlign: "center",
+                  borderRadius: "12px",
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = "rgba(167,230,255,0.05)";
+                  e.target.style.color = "#A7E6FF";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = "transparent";
+                  e.target.style.color = "#fff";
+                }}
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </div>
       )}
-    </div>
 
-    {/* Hamburger */}
-    <button
-      onClick={() => setMenuOpen(true)}
-      style={{
-        background: "transparent",
-        border: "none",
-        cursor: "pointer",
-        display: "flex",
-        flexDirection: "column",
-        gap: "6px",
-      }}
-    >
-      <span
-        style={{
-          width: "28px",
-          height: "2px",
-          background: "#A7E6FF",
-        }}
-      />
-      <span
-        style={{
-          width: "22px",
-          height: "2px",
-          background: "#A7E6FF",
-          marginLeft: "6px",
-        }}
-      />
-      <span
-        style={{
-          width: "28px",
-          height: "2px",
-          background: "#A7E6FF",
-        }}
-      />
-    </button>
-  </nav>
+      {/* Global Styles for Animations */}
+      <style jsx global>{`
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
 
-  {/* Overlay */}
-  <div
-    onClick={closeMenu}
-    style={{
-      position: "fixed",
-      inset: 0,
-      background: "rgba(0,0,0,.6)",
-      backdropFilter: "blur(8px)",
-      opacity: menuOpen ? 1 : 0,
-      visibility: menuOpen ? "visible" : "hidden",
-      transition: ".4s",
-      zIndex: 1100,
-    }}
-  />
+        @media (max-width: 768px) {
+          .desktop-menu {
+            display: none !important;
+          }
+        }
 
-  {/* Slide Menu */}
-  <div
-    style={{
-      position: "fixed",
-      top: 0,
-      right: 0,
-      width: "320px",
-      maxWidth: "90%",
-      height: "100vh",
-      background: "#050505",
-      borderLeft: "1px solid rgba(167,230,255,.15)",
-      backdropFilter: "blur(20px)",
-      transform: menuOpen
-        ? "translateX(0)"
-        : "translateX(100%)",
-      transition: "all .45s cubic-bezier(.77,0,.18,1)",
-      zIndex: 1200,
-      padding: "40px",
-      boxSizing: "border-box",
-    }}
-  >
-    {/* Close */}
-    <button
-      onClick={closeMenu}
-      style={{
-        background: "transparent",
-        border: "none",
-        color: "#A7E6FF",
-        fontSize: "34px",
-        cursor: "pointer",
-        marginBottom: "50px",
-      }}
-    >
-      ×
-    </button>
-
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "10px",
-      }}
-    >
-      {["About", "Services", "Works", "Skills", "Contact"].map(
-        (item, index) => (
-          <a
-            key={item}
-            href={`#${item.toLowerCase()}`}
-            onClick={closeMenu}
-            style={{
-              color: "#fff",
-              textDecoration: "none",
-              fontSize: "24px",
-              fontWeight: "600",
-              padding: "18px 22px",
-              borderRadius: "16px",
-              border:
-                "1px solid rgba(167,230,255,.08)",
-              background:
-                "rgba(255,255,255,.02)",
-              transition: ".35s",
-              animation: `fadeIn .4s ease forwards`,
-              animationDelay: `${index * 0.08}s`,
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.background = "#A7E6FF";
-              e.target.style.color = "#000";
-              e.target.style.transform =
-                "translateX(-10px)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background =
-                "rgba(255,255,255,.02)";
-              e.target.style.color = "#fff";
-              e.target.style.transform =
-                "translateX(0)";
-            }}
-          >
-            {item}
-          </a>
-        )
-      )}
-    </div>
-  </div>
-
-  <style jsx>{`
-    .desktop-menu {
-      display: flex;
-      gap: 35px;
-    }
-
-    .desktop-menu a::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: -8px;
-      width: 0%;
-      height: 2px;
-      background: #a7e6ff;
-      transition: 0.35s;
-    }
-
-    .desktop-menu a:hover {
-      color: #a7e6ff;
-    }
-
-    .desktop-menu a:hover::after {
-      width: 100%;
-    }
-
-    @media (max-width: 900px) {
-      .desktop-menu {
-        display: none;
-      }
-    }
-
-    @media (min-width: 901px) {
-      button {
-        display: none !important;
-      }
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateX(40px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-  `}</style>
-</>
-```
-
-);
+        @media (min-width: 769px) {
+          button[aria-label="Toggle menu"] {
+            display: none !important;
+          }
+        }
+      `}</style>
+    </>
+  );
 }
