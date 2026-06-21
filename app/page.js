@@ -277,7 +277,6 @@ Shuhaib AP </h2>
     © 2026 Shuhaib AP. All Rights Reserved.
   </footer>
 </main>
-```
 
 );
 }
