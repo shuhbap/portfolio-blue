@@ -1,8 +1,22 @@
+
+
 "use client";
 
 import Navbar from "@/components/Navbar";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   return (
     <main
       style={{
@@ -11,6 +25,8 @@ export default function Home() {
         minHeight: "100vh",
         fontFamily: "'Outfit', sans-serif",
         overflowX: "hidden",
+        width: "100%",
+        maxWidth: "100vw",
       }}
     >
       <Navbar />
@@ -18,28 +34,30 @@ export default function Home() {
       {/* Hero Section */}
       <section
         style={{
-          padding: "160px 8% 80px",
+          padding: isMobile ? "120px 5% 60px" : "160px 8% 80px",
           textAlign: "center",
-          minHeight: "100vh",
+          minHeight: isMobile ? "90vh" : "100vh",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
           background:
             "radial-gradient(circle at 50% 50%, rgba(167,230,255,0.03) 0%, transparent 70%)",
+          width: "100%",
         }}
       >
-        <div>
+        <div style={{ width: "100%", padding: isMobile ? "0 10px" : "0" }}>
           <h1
             style={{
-              fontSize: "clamp(3.5rem, 10vw, 7rem)",
+              fontSize: isMobile ? "clamp(2.8rem, 12vw, 4.5rem)" : "clamp(3.5rem, 10vw, 7rem)",
               fontWeight: "800",
               lineHeight: 1.1,
-              marginBottom: "20px",
+              marginBottom: isMobile ? "15px" : "20px",
               background: "linear-gradient(135deg, #fff 0%, #A7E6FF 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
+              wordWrap: "break-word",
             }}
           >
             Shuhaib AP
@@ -47,12 +65,13 @@ export default function Home() {
 
           <p
             style={{
-              fontSize: "clamp(1.2rem, 2.5vw, 1.8rem)",
+              fontSize: isMobile ? "clamp(1rem, 4vw, 1.4rem)" : "clamp(1.2rem, 2.5vw, 1.8rem)",
               color: "#A7E6FF",
-              marginBottom: "15px",
+              marginBottom: isMobile ? "10px" : "15px",
               fontWeight: "300",
-              letterSpacing: "2px",
+              letterSpacing: isMobile ? "1px" : "2px",
               textShadow: "0 0 40px rgba(167,230,255,0.2)",
+              padding: "0 10px",
             }}
           >
             Digital Marketer
@@ -60,11 +79,12 @@ export default function Home() {
 
           <p
             style={{
-              fontSize: "clamp(0.9rem, 1.5vw, 1.2rem)",
+              fontSize: isMobile ? "clamp(0.75rem, 2.5vw, 0.95rem)" : "clamp(0.9rem, 1.5vw, 1.2rem)",
               color: "#8899aa",
-              marginBottom: "40px",
-              letterSpacing: "4px",
+              marginBottom: isMobile ? "30px" : "40px",
+              letterSpacing: isMobile ? "2px" : "4px",
               fontWeight: "300",
+              padding: "0 10px",
             }}
           >
             SEO Specialist • Creative Designer
@@ -74,23 +94,34 @@ export default function Home() {
             style={{
               background: "linear-gradient(135deg, #A7E6FF 0%, #7ec8e3 100%)",
               color: "#000",
-              padding: "16px 44px",
+              padding: isMobile ? "14px 32px" : "16px 44px",
               borderRadius: "50px",
               border: "none",
               fontWeight: "700",
               cursor: "pointer",
-              fontSize: "clamp(14px, 1.2vw, 18px)",
+              fontSize: isMobile ? "clamp(12px, 3vw, 14px)" : "clamp(14px, 1.2vw, 18px)",
               boxShadow: "0 0 50px rgba(167,230,255,0.3)",
               transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
               letterSpacing: "1px",
+              width: isMobile ? "100%" : "auto",
+              maxWidth: isMobile ? "300px" : "none",
+              margin: "0 auto",
+              display: "block",
             }}
             onMouseEnter={(e) => {
-              e.target.style.transform = "scale(1.05)";
-              e.target.style.boxShadow = "0 0 80px rgba(167,230,255,0.5)";
+              if (!isMobile) {
+                e.target.style.transform = "scale(1.05)";
+                e.target.style.boxShadow = "0 0 80px rgba(167,230,255,0.5)";
+              }
             }}
             onMouseLeave={(e) => {
-              e.target.style.transform = "scale(1)";
-              e.target.style.boxShadow = "0 0 50px rgba(167,230,255,0.3)";
+              if (!isMobile) {
+                e.target.style.transform = "scale(1)";
+                e.target.style.boxShadow = "0 0 50px rgba(167,230,255,0.3)";
+              }
+            }}
+            onTouchStart={() => {
+              // Mobile touch feedback
             }}
             onClick={() => {
               document.getElementById("contact")?.scrollIntoView({
@@ -104,20 +135,20 @@ export default function Home() {
       </section>
 
       {/* About Section */}
-      <section id="about" style={sectionStyle}>
-        <div style={containerStyle}>
-          <h2 style={headingStyle}>About Me</h2>
+      <section id="about" style={sectionStyle(isMobile)}>
+        <div style={containerStyle(isMobile)}>
+          <h2 style={headingStyle(isMobile)}>About Me</h2>
           <div
             style={{
-              width: "60px",
+              width: isMobile ? "50px" : "60px",
               height: "3px",
               background: "#A7E6FF",
-              marginBottom: "30px",
+              marginBottom: isMobile ? "25px" : "30px",
               borderRadius: "2px",
               boxShadow: "0 0 20px rgba(167,230,255,0.4)",
             }}
           />
-          <p style={textStyle}>
+          <p style={textStyle(isMobile)}>
             I'm a passionate Digital Marketer helping businesses grow online
             through SEO, paid advertising, branding, content strategy and
             creative design solutions. With 5+ years of experience, I deliver
@@ -127,20 +158,20 @@ export default function Home() {
       </section>
 
       {/* Services Section */}
-      <section id="services" style={sectionStyle}>
-        <div style={containerStyle}>
-          <h2 style={headingStyle}>Services</h2>
+      <section id="services" style={sectionStyle(isMobile)}>
+        <div style={containerStyle(isMobile)}>
+          <h2 style={headingStyle(isMobile)}>Services</h2>
           <div
             style={{
-              width: "60px",
+              width: isMobile ? "50px" : "60px",
               height: "3px",
               background: "#A7E6FF",
-              marginBottom: "40px",
+              marginBottom: isMobile ? "30px" : "40px",
               borderRadius: "2px",
               boxShadow: "0 0 20px rgba(167,230,255,0.4)",
             }}
           />
-          <div style={cardGrid}>
+          <div style={cardGrid(isMobile)}>
             {[
               "SEO Optimization",
               "Google Ads",
@@ -151,29 +182,35 @@ export default function Home() {
             ].map((service, index) => (
               <div
                 key={index}
-                style={cardStyle}
+                style={cardStyle(isMobile)}
                 onMouseEnter={(e) => {
-                  e.target.style.transform = "translateY(-10px)";
-                  e.target.style.boxShadow =
-                    "0 20px 60px rgba(167,230,255,0.15)";
-                  e.target.style.borderColor = "rgba(167,230,255,0.4)";
+                  if (!isMobile) {
+                    e.target.style.transform = "translateY(-10px)";
+                    e.target.style.boxShadow =
+                      "0 20px 60px rgba(167,230,255,0.15)";
+                    e.target.style.borderColor = "rgba(167,230,255,0.4)";
+                  }
                 }}
                 onMouseLeave={(e) => {
-                  e.target.style.transform = "translateY(0)";
-                  e.target.style.boxShadow = "none";
-                  e.target.style.borderColor = "rgba(167,230,255,0.15)";
+                  if (!isMobile) {
+                    e.target.style.transform = "translateY(0)";
+                    e.target.style.boxShadow = "none";
+                    e.target.style.borderColor = "rgba(167,230,255,0.15)";
+                  }
                 }}
               >
                 <span
                   style={{
-                    fontSize: "2rem",
+                    fontSize: isMobile ? "1.8rem" : "2rem",
                     display: "block",
                     marginBottom: "10px",
                   }}
                 >
                   {["🚀", "📊", "📱", "📈", "🎨", "✏️"][index]}
                 </span>
-                {service}
+                <span style={{ fontSize: isMobile ? "0.9rem" : "1rem" }}>
+                  {service}
+                </span>
               </div>
             ))}
           </div>
@@ -181,20 +218,20 @@ export default function Home() {
       </section>
 
       {/* Works Section */}
-      <section id="works" style={sectionStyle}>
-        <div style={containerStyle}>
-          <h2 style={headingStyle}>My Works</h2>
+      <section id="works" style={sectionStyle(isMobile)}>
+        <div style={containerStyle(isMobile)}>
+          <h2 style={headingStyle(isMobile)}>My Works</h2>
           <div
             style={{
-              width: "60px",
+              width: isMobile ? "50px" : "60px",
               height: "3px",
               background: "#A7E6FF",
-              marginBottom: "40px",
+              marginBottom: isMobile ? "30px" : "40px",
               borderRadius: "2px",
               boxShadow: "0 0 20px rgba(167,230,255,0.4)",
             }}
           />
-          <div style={cardGrid}>
+          <div style={cardGrid(isMobile)}>
             {[
               {
                 title: "SEO Projects",
@@ -216,23 +253,34 @@ export default function Home() {
               <div
                 key={index}
                 style={{
-                  ...cardStyle,
+                  ...cardStyle(isMobile),
                   textAlign: "left",
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.transform = "translateY(-10px) scale(1.02)";
-                  e.target.style.boxShadow =
-                    "0 20px 60px rgba(167,230,255,0.15)";
+                  if (!isMobile) {
+                    e.target.style.transform = "translateY(-10px) scale(1.02)";
+                    e.target.style.boxShadow =
+                      "0 20px 60px rgba(167,230,255,0.15)";
+                  }
                 }}
                 onMouseLeave={(e) => {
-                  e.target.style.transform = "translateY(0) scale(1)";
-                  e.target.style.boxShadow = "none";
+                  if (!isMobile) {
+                    e.target.style.transform = "translateY(0) scale(1)";
+                    e.target.style.boxShadow = "none";
+                  }
                 }}
               >
-                <h3 style={{ color: "#A7E6FF", marginBottom: "10px" }}>
+                <h3 style={{ 
+                  color: "#A7E6FF", 
+                  marginBottom: "10px",
+                  fontSize: isMobile ? "1.1rem" : "1.3rem" 
+                }}>
                   {work.title}
                 </h3>
-                <p style={{ color: "#8899aa", fontSize: "0.9rem" }}>
+                <p style={{ 
+                  color: "#8899aa", 
+                  fontSize: isMobile ? "0.8rem" : "0.9rem" 
+                }}>
                   {work.desc}
                 </p>
               </div>
@@ -242,20 +290,20 @@ export default function Home() {
       </section>
 
       {/* Skills Section */}
-      <section id="skills" style={sectionStyle}>
-        <div style={containerStyle}>
-          <h2 style={headingStyle}>Skills</h2>
+      <section id="skills" style={sectionStyle(isMobile)}>
+        <div style={containerStyle(isMobile)}>
+          <h2 style={headingStyle(isMobile)}>Skills</h2>
           <div
             style={{
-              width: "60px",
+              width: isMobile ? "50px" : "60px",
               height: "3px",
               background: "#A7E6FF",
-              marginBottom: "40px",
+              marginBottom: isMobile ? "30px" : "40px",
               borderRadius: "2px",
               boxShadow: "0 0 20px rgba(167,230,255,0.4)",
             }}
           />
-          <div style={skillGrid}>
+          <div style={skillGrid(isMobile)}>
             {[
               "Digital Marketing",
               "SEO",
@@ -275,20 +323,24 @@ export default function Home() {
               <div
                 key={index}
                 style={{
-                  ...cardStyle,
+                  ...cardStyle(isMobile),
                   textAlign: "center",
-                  fontSize: "0.95rem",
-                  padding: "18px 20px",
+                  fontSize: isMobile ? "0.85rem" : "0.95rem",
+                  padding: isMobile ? "14px 12px" : "18px 20px",
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.transform = "scale(1.05)";
-                  e.target.style.background = "rgba(167,230,255,0.08)";
-                  e.target.style.borderColor = "rgba(167,230,255,0.4)";
+                  if (!isMobile) {
+                    e.target.style.transform = "scale(1.05)";
+                    e.target.style.background = "rgba(167,230,255,0.08)";
+                    e.target.style.borderColor = "rgba(167,230,255,0.4)";
+                  }
                 }}
                 onMouseLeave={(e) => {
-                  e.target.style.transform = "scale(1)";
-                  e.target.style.background = "rgba(255,255,255,0.03)";
-                  e.target.style.borderColor = "rgba(167,230,255,0.15)";
+                  if (!isMobile) {
+                    e.target.style.transform = "scale(1)";
+                    e.target.style.background = "rgba(255,255,255,0.03)";
+                    e.target.style.borderColor = "rgba(167,230,255,0.15)";
+                  }
                 }}
               >
                 {skill}
@@ -299,53 +351,68 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" style={{ ...sectionStyle, paddingBottom: "40px" }}>
-        <div style={containerStyle}>
-          <h2 style={headingStyle}>Contact</h2>
+      <section id="contact" style={{ ...sectionStyle(isMobile), paddingBottom: isMobile ? "30px" : "40px" }}>
+        <div style={containerStyle(isMobile)}>
+          <h2 style={headingStyle(isMobile)}>Contact</h2>
           <div
             style={{
-              width: "60px",
+              width: isMobile ? "50px" : "60px",
               height: "3px",
               background: "#A7E6FF",
-              marginBottom: "40px",
+              marginBottom: isMobile ? "30px" : "40px",
               borderRadius: "2px",
               boxShadow: "0 0 20px rgba(167,230,255,0.4)",
             }}
           />
           <div
             style={{
-              ...contactCard,
+              ...contactCard(isMobile),
               maxWidth: "600px",
               margin: "0 auto",
             }}
           >
-            <div style={contactItem}>
-              <span style={{ fontSize: "1.5rem" }}>📱</span>
+            <div style={contactItem(isMobile)}>
+              <span style={{ fontSize: isMobile ? "1.3rem" : "1.5rem" }}>📱</span>
               <div>
-                <p style={{ color: "#8899aa", fontSize: "0.8rem" }}>
+                <p style={{ color: "#8899aa", fontSize: isMobile ? "0.7rem" : "0.8rem" }}>
                   WhatsApp
                 </p>
-                <p style={{ color: "#fff", fontWeight: "500" }}>
+                <p style={{ 
+                  color: "#fff", 
+                  fontWeight: "500",
+                  fontSize: isMobile ? "0.9rem" : "1rem",
+                  wordBreak: "break-word" 
+                }}>
                   +91 7448520075
                 </p>
               </div>
             </div>
-            <div style={contactItem}>
-              <span style={{ fontSize: "1.5rem" }}>📧</span>
+            <div style={contactItem(isMobile)}>
+              <span style={{ fontSize: isMobile ? "1.3rem" : "1.5rem" }}>📧</span>
               <div>
-                <p style={{ color: "#8899aa", fontSize: "0.8rem" }}>Email</p>
-                <p style={{ color: "#fff", fontWeight: "500" }}>
+                <p style={{ color: "#8899aa", fontSize: isMobile ? "0.7rem" : "0.8rem" }}>Email</p>
+                <p style={{ 
+                  color: "#fff", 
+                  fontWeight: "500",
+                  fontSize: isMobile ? "0.9rem" : "1rem",
+                  wordBreak: "break-word" 
+                }}>
                   shuhaiiibap@gmail.com
                 </p>
               </div>
             </div>
-            <div style={contactItem}>
-              <span style={{ fontSize: "1.5rem" }}>📷</span>
+            <div style={contactItem(isMobile)}>
+              <span style={{ fontSize: isMobile ? "1.3rem" : "1.5rem" }}>📷</span>
               <div>
-                <p style={{ color: "#8899aa", fontSize: "0.8rem" }}>
+                <p style={{ color: "#8899aa", fontSize: isMobile ? "0.7rem" : "0.8rem" }}>
                   Instagram
                 </p>
-                <p style={{ color: "#fff", fontWeight: "500" }}>
+                <p style={{ 
+                  color: "#fff", 
+                  fontWeight: "500",
+                  fontSize: isMobile ? "0.9rem" : "1rem",
+                  wordBreak: "break-word" 
+                }}>
                   @shuhaiiiiib.ap
                 </p>
               </div>
@@ -358,11 +425,11 @@ export default function Home() {
       <footer
         style={{
           textAlign: "center",
-          padding: "30px 8%",
+          padding: isMobile ? "25px 5%" : "30px 8%",
           color: "#444",
           borderTop: "1px solid rgba(167,230,255,0.05)",
-          fontSize: "0.9rem",
-          letterSpacing: "1px",
+          fontSize: isMobile ? "0.75rem" : "0.9rem",
+          letterSpacing: isMobile ? "0.5px" : "1px",
         }}
       >
         © 2026 Shuhaib AP. All Rights Reserved.
@@ -379,8 +446,14 @@ export default function Home() {
           scroll-behavior: smooth;
         }
 
+        html, body {
+          overflow-x: hidden;
+          width: 100%;
+          max-width: 100vw;
+        }
+
         ::-webkit-scrollbar {
-          width: 8px;
+          width: 6px;
         }
 
         ::-webkit-scrollbar-track {
@@ -395,75 +468,92 @@ export default function Home() {
         ::-webkit-scrollbar-thumb:hover {
           background: #7ec8e3;
         }
+
+        @media (max-width: 480px) {
+          ::-webkit-scrollbar {
+            width: 4px;
+          }
+        }
+
+        @media (max-width: 768px) {
+          * {
+            -webkit-tap-highlight-color: transparent;
+          }
+        }
       `}</style>
     </main>
   );
 }
 
-// Styles
-const sectionStyle = {
-  padding: "80px 8%",
+// Styles - Mobile Responsive
+const sectionStyle = (isMobile) => ({
+  padding: isMobile ? "60px 5%" : "80px 8%",
   background: "rgba(255,255,255,0.01)",
-};
+  width: "100%",
+});
 
-const containerStyle = {
+const containerStyle = (isMobile) => ({
   maxWidth: "1200px",
   margin: "0 auto",
-};
+  padding: isMobile ? "0 5px" : "0",
+});
 
-const headingStyle = {
-  fontSize: "clamp(2rem, 4vw, 3rem)",
+const headingStyle = (isMobile) => ({
+  fontSize: isMobile ? "clamp(1.8rem, 6vw, 2.5rem)" : "clamp(2rem, 4vw, 3rem)",
   color: "#A7E6FF",
   fontWeight: "700",
-  letterSpacing: "-1px",
-};
+  letterSpacing: isMobile ? "-0.5px" : "-1px",
+});
 
-const textStyle = {
+const textStyle = (isMobile) => ({
   color: "#ccc",
-  lineHeight: 1.9,
+  lineHeight: isMobile ? 1.8 : 1.9,
   maxWidth: "700px",
-  fontSize: "clamp(1rem, 1.2vw, 1.15rem)",
+  fontSize: isMobile ? "clamp(0.9rem, 3vw, 1rem)" : "clamp(1rem, 1.2vw, 1.15rem)",
   fontWeight: "300",
-};
+  padding: isMobile ? "0 5px" : "0",
+});
 
-const cardGrid = {
+const cardGrid = (isMobile) => ({
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-  gap: "25px",
-};
+  gridTemplateColumns: isMobile ? "repeat(auto-fit, minmax(140px, 1fr))" : "repeat(auto-fit, minmax(250px, 1fr))",
+  gap: isMobile ? "15px" : "25px",
+});
 
-const skillGrid = {
+const skillGrid = (isMobile) => ({
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-  gap: "15px",
-};
+  gridTemplateColumns: isMobile ? "repeat(auto-fit, minmax(120px, 1fr))" : "repeat(auto-fit, minmax(160px, 1fr))",
+  gap: isMobile ? "10px" : "15px",
+});
 
-const cardStyle = {
+const cardStyle = (isMobile) => ({
   background: "rgba(255,255,255,0.03)",
   border: "1px solid rgba(167,230,255,0.12)",
-  padding: "28px 20px",
-  borderRadius: "20px",
+  padding: isMobile ? "20px 15px" : "28px 20px",
+  borderRadius: isMobile ? "16px" : "20px",
   backdropFilter: "blur(10px)",
   color: "#fff",
   transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
   cursor: "default",
   fontWeight: "500",
   letterSpacing: "0.3px",
-};
+  textAlign: "center",
+  WebkitTapHighlightColor: "transparent",
+});
 
-const contactCard = {
+const contactCard = (isMobile) => ({
   background: "rgba(255,255,255,0.03)",
   border: "1px solid rgba(167,230,255,0.12)",
-  borderRadius: "24px",
-  padding: "35px",
+  borderRadius: isMobile ? "20px" : "24px",
+  padding: isMobile ? "25px 20px" : "35px",
   color: "#fff",
   backdropFilter: "blur(10px)",
-};
+});
 
-const contactItem = {
+const contactItem = (isMobile) => ({
   display: "flex",
   alignItems: "center",
-  gap: "20px",
-  padding: "15px 0",
+  gap: isMobile ? "15px" : "20px",
+  padding: isMobile ? "12px 0" : "15px 0",
   borderBottom: "1px solid rgba(167,230,255,0.05)",
-};
+});
